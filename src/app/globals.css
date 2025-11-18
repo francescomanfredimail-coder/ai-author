@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f1e8;
+  --foreground: #2c2416;
+  --sidebar: #3d3528;
+  --accent: #8b6f47;
+  --paper: #faf8f3;
+  --border: #d4c4a8;
 }
 
 @theme inline {
@@ -14,13 +18,121 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a1611;
+    --foreground: #e8e0d4;
+    --sidebar: #2a2419;
+    --accent: #a6895d;
+    --paper: #252017;
+    --border: #3d3528;
   }
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), 'Georgia', 'Times New Roman', serif;
+  line-height: 1.7;
+  margin: 0;
+  padding: 0;
+}
+
+/* TipTap Editor Styles - Stile libreria */
+.ProseMirror {
+  outline: none;
+  min-height: 300px;
+  padding: 2rem;
+  background: var(--paper);
+  border-radius: 8px;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  line-height: 1.8;
+  color: var(--foreground);
+}
+
+.ProseMirror p {
+  margin: 1rem 0;
+  line-height: 1.9;
+  font-size: 1.1rem;
+}
+
+.ProseMirror h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 2rem 0 1.5rem 0;
+  color: var(--accent);
+  font-family: 'Georgia', serif;
+}
+
+.ProseMirror h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem 0;
+  color: var(--accent);
+  font-family: 'Georgia', serif;
+}
+
+.ProseMirror h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.75rem 0;
+  color: var(--accent);
+}
+
+.ProseMirror strong {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.ProseMirror em {
+  font-style: italic;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 2rem;
+  margin: 1rem 0;
+}
+
+.ProseMirror li {
+  margin: 0.5rem 0;
+  line-height: 1.8;
+}
+
+.ProseMirror blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--accent);
+  background: rgba(139, 111, 71, 0.05);
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+}
+
+.ProseMirror::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  opacity: 0.8;
 }
