@@ -2,13 +2,32 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Home, FileText, Sparkles, DollarSign, BookMarked, PenTool } from 'lucide-react';
+import { BookOpen, Home, FileText, Sparkles, DollarSign, BookMarked, PenTool, LogOut, User } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { Logo } from '@/components/Logo';
+import { getAuth, clearAuth } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { projects, totalCreditsUsed, currentProject } = useStore();
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUsername(getAuth());
+    }
+  }, []);
+
+  const handleLogout = () => {
+    if (confirm('Sei sicuro di voler uscire?')) {
+      clearAuth();
+      router.push('/login');
+      router.refresh();
+    }
+  };
 
   const navItems = [
     { href: '/', icon: Home, label: 'Dashboard' },
@@ -62,6 +81,17 @@ export function Sidebar() {
       </nav>
 
   <div className="mt-auto pt-6 border-t" style={{ borderColor: 'rgba(212, 196, 168, 0.3)' }}>
+        {username && (
+          <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(139, 111, 71, 0.2)' }}>
+            <div className="flex items-center gap-2 mb-2">
+              <User size={14} style={{ color: '#a6895d' }} />
+              <p className="text-xs" style={{ color: '#a6895d' }}>Utente</p>
+            </div>
+            <p className="text-sm font-semibold" style={{ color: '#fff' }}>
+              {username}
+            </p>
+          </div>
+        )}
         {currentProject && (
           <div className="mb-4 p-3 rounded-lg" style={{ backgroundColor: 'rgba(139, 111, 71, 0.2)' }}>
             <p className="text-xs mb-1" style={{ color: '#a6895d' }}>Progetto Corrente</p>
@@ -73,12 +103,30 @@ export function Sidebar() {
         <div className="text-sm mb-3" style={{ color: '#a6895d' }}>
           <p>Progetti attivi: {projects.length}</p>
         </div>
-        <div className="flex items-center gap-2 text-sm" style={{ color: '#d4c4a8' }}>
+        <div className="flex items-center gap-2 text-sm mb-4" style={{ color: '#d4c4a8' }}>
           <DollarSign size={16} />
           <span>
             Crediti: <span className="font-semibold" style={{ color: '#fff' }}>${totalCreditsUsed.toFixed(4)}</span>
           </span>
         </div>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-2 px-4 py-2 rounded-lg transition-colors border"
+          style={{
+            borderColor: 'rgba(220, 38, 38, 0.5)',
+            backgroundColor: 'transparent',
+            color: '#dc2626'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+        >
+          <LogOut size={16} />
+          <span>Esci</span>
+        </button>
       </div>
     </aside>
   );

@@ -31,11 +31,18 @@ class MemoryManager {
     return MemoryManager.instance;
   }
 
+  private getStorageKey(): string {
+    if (typeof window === 'undefined') return 'ai-memories';
+    const username = localStorage.getItem('lama-bollente-auth');
+    return username ? `ai-memories-${username}` : 'ai-memories';
+  }
+
   private loadMemories() {
     if (typeof window === 'undefined') return;
     
     try {
-      const saved = localStorage.getItem('ai-memories');
+      const storageKey = this.getStorageKey();
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         const parsed = JSON.parse(saved);
         this.memories = new Map(Object.entries(parsed));
@@ -49,11 +56,18 @@ class MemoryManager {
     if (typeof window === 'undefined') return;
     
     try {
+      const storageKey = this.getStorageKey();
       const toSave = Object.fromEntries(this.memories);
-      localStorage.setItem('ai-memories', JSON.stringify(toSave));
+      localStorage.setItem(storageKey, JSON.stringify(toSave));
     } catch (error) {
       console.error('Errore nel salvataggio delle memorie:', error);
     }
+  }
+
+  // Ricarica le memorie quando cambia utente
+  reloadForUser() {
+    this.memories.clear();
+    this.loadMemories();
   }
 
   getMemory(projectId: string): AIMemory | null {

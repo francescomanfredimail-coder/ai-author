@@ -6,6 +6,14 @@ import { Layout } from '@/components/Layout';
 import { useStore } from '@/lib/store';
 import { BookOpen, Sparkles, ArrowRight, CheckCircle, Loader2, ArrowLeft } from 'lucide-react';
 import { memoryManager } from '@/lib/memory';
+import { getAuth } from '@/lib/auth';
+
+// Helper per ottenere la chiave del libro basata sull'utente
+function getBookStorageKey(projectId: string): string {
+  if (typeof window === 'undefined') return `book-${projectId}`;
+  const username = getAuth();
+  return username ? `book-${username}-${projectId}` : `book-${projectId}`;
+}
 
 interface Chapter {
   id: string;
@@ -348,7 +356,8 @@ REGOLE IMPORTANTI:
       }
 
       // Salva il libro completato
-      localStorage.setItem(`book-${project.id}`, JSON.stringify({
+      const bookKey = getBookStorageKey(project.id);
+      localStorage.setItem(bookKey, JSON.stringify({
         ...newBook,
         chapters: generatedChapters,
         updatedAt: new Date().toISOString(),

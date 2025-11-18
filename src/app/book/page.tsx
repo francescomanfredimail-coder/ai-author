@@ -9,6 +9,14 @@ import { TextEditor } from '@/components/TextEditor';
 import { ClientOnly } from '@/components/ClientOnly';
 import { ExportButton } from '@/components/ExportButton';
 import { BookExportButton } from '@/components/BookExportButton';
+import { getAuth } from '@/lib/auth';
+
+// Helper per ottenere la chiave del libro basata sull'utente
+function getBookStorageKey(projectId: string): string {
+  if (typeof window === 'undefined') return `book-${projectId}`;
+  const username = getAuth();
+  return username ? `book-${username}-${projectId}` : `book-${projectId}`;
+}
 
 interface Chapter {
   id: string;
@@ -58,7 +66,8 @@ export default function BookPage() {
     }
 
     try {
-      const savedBook = localStorage.getItem(`book-${currentProject.id}`);
+      const bookKey = getBookStorageKey(currentProject.id);
+      const savedBook = localStorage.getItem(bookKey);
       if (savedBook) {
         const parsedBook = JSON.parse(savedBook);
         setBook(parsedBook);
@@ -104,7 +113,8 @@ export default function BookPage() {
     if (!isMounted || !book) return;
     try {
       const updatedBook = { ...book, updatedAt: new Date().toISOString() };
-      localStorage.setItem(`book-${book.id}`, JSON.stringify(updatedBook));
+      const bookKey = getBookStorageKey(book.id);
+      localStorage.setItem(bookKey, JSON.stringify(updatedBook));
       setBook(updatedBook);
       alert('Libro salvato!');
     } catch (error) {

@@ -37,6 +37,13 @@ interface AppState {
   resetCredits: () => void;
 }
 
+// Funzione per ottenere il nome dello storage basato sull'utente
+function getStorageName(): string {
+  if (typeof window === 'undefined') return 'ai-author-storage';
+  const username = localStorage.getItem('lama-bollente-auth');
+  return username ? `ai-author-storage-${username}` : 'ai-author-storage';
+}
+
 export const useStore = create<AppState>()(
   persist(
     (set) => ({
@@ -132,8 +139,27 @@ export const useStore = create<AppState>()(
       },
     }),
     {
-      name: 'ai-author-storage',
+      name: getStorageName(),
       skipHydration: true, // Evita problemi di idratazione
+      // Custom storage per cambiare dinamicamente in base all'utente
+      storage: {
+        getItem: (name: string) => {
+          const storageName = getStorageName();
+          if (typeof window === 'undefined') return null;
+          const value = localStorage.getItem(storageName);
+          return value;
+        },
+        setItem: (name: string, value: string) => {
+          const storageName = getStorageName();
+          if (typeof window === 'undefined') return;
+          localStorage.setItem(storageName, value);
+        },
+        removeItem: (name: string) => {
+          const storageName = getStorageName();
+          if (typeof window === 'undefined') return;
+          localStorage.removeItem(storageName);
+        },
+      },
     }
   )
 );
