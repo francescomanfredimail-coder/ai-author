@@ -218,3 +218,4 @@ Se il link del sito deployato non funziona:
 ## Licenza
 
 MIT
+# Updated Tue Nov 18 16:12:26 CET 2025
