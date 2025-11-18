@@ -139,25 +139,38 @@ export const useStore = create<AppState>()(
       },
     }),
     {
-      name: getStorageName(),
+      name: 'ai-author-storage', // Nome base, verrà sovrascritto dinamicamente
       skipHydration: true, // Evita problemi di idratazione
       // Custom storage per cambiare dinamicamente in base all'utente
       storage: {
         getItem: (name: string) => {
           const storageName = getStorageName();
           if (typeof window === 'undefined') return null;
-          const value = localStorage.getItem(storageName);
-          return value;
+          try {
+            const value = localStorage.getItem(storageName);
+            if (!value) return null;
+            return JSON.parse(value);
+          } catch {
+            return null;
+          }
         },
-        setItem: (name: string, value: string) => {
+        setItem: (name: string, value: any): void => {
           const storageName = getStorageName();
           if (typeof window === 'undefined') return;
-          localStorage.setItem(storageName, value);
+          try {
+            localStorage.setItem(storageName, JSON.stringify(value));
+          } catch (error) {
+            console.error('Errore nel salvataggio:', error);
+          }
         },
-        removeItem: (name: string) => {
+        removeItem: (name: string): void => {
           const storageName = getStorageName();
           if (typeof window === 'undefined') return;
-          localStorage.removeItem(storageName);
+          try {
+            localStorage.removeItem(storageName);
+          } catch (error) {
+            console.error('Errore nella rimozione:', error);
+          }
         },
       },
     }
