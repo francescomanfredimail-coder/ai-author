@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Home, FileText, Sparkles, DollarSign, BookMarked, PenTool, LogOut, User } from 'lucide-react';
+import { BookOpen, Home, FileText, Sparkles, DollarSign, BookMarked, PenTool, LogOut, User, Menu, X } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { Logo } from '@/components/Logo';
 import { getAuth, clearAuth } from '@/lib/auth';
@@ -14,12 +14,18 @@ export function Sidebar() {
   const router = useRouter();
   const { projects, totalCreditsUsed, currentProject } = useStore();
   const [username, setUsername] = useState<string | null>(null);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setUsername(getAuth());
     }
   }, []);
+
+  // Chiudi il menu quando cambia la route
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
 
   const handleLogout = () => {
     if (confirm('Sei sicuro di voler uscire?')) {
@@ -37,14 +43,49 @@ export function Sidebar() {
     { href: '/projects', icon: BookOpen, label: 'Progetti' },
   ];
 
+  const handleLinkClick = () => {
+    if (window.innerWidth < 768) {
+      setIsMobileOpen(false);
+    }
+  };
+
   return (
-    <aside 
-      className="w-64 min-h-screen p-6 flex flex-col shadow-lg"
-      style={{ 
-        backgroundColor: 'var(--sidebar)',
-        color: '#e8e0d4'
-      }}
-    >
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg shadow-lg"
+        style={{ 
+          backgroundColor: 'var(--sidebar)',
+          color: '#e8e0d4'
+        }}
+        aria-label="Toggle menu"
+      >
+        {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Overlay per mobile */}
+      {isMobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      <aside 
+        className={`
+          fixed md:static
+          top-0 left-0
+          w-64 min-h-screen p-6 flex flex-col shadow-lg
+          z-40
+          transform transition-transform duration-300 ease-in-out
+          ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
+        style={{ 
+          backgroundColor: 'var(--sidebar)',
+          color: '#e8e0d4'
+        }}
+      >
       <div className="mb-8">
         <div className="mb-2">
           <Logo size="md" showText={true} animated={true} textColor="#d4c4a8" />
@@ -63,6 +104,7 @@ export function Sidebar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={handleLinkClick}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
                     isActive ? 'shadow-md text-white' : 'hover:shadow-sm text-[#d4c4a8]'
                   }`}
@@ -129,5 +171,6 @@ export function Sidebar() {
         </button>
       </div>
     </aside>
+    </>
   );
 }

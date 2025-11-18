@@ -34,6 +34,10 @@ class MemoryManager {
   private getStorageKey(): string {
     if (typeof window === 'undefined') return 'ai-memories';
     const username = localStorage.getItem('lama-bollente-auth');
+    // L'admin accede ai dati senza prefisso (dati esistenti)
+    if (username === 'admin') {
+      return 'ai-memories';
+    }
     return username ? `ai-memories-${username}` : 'ai-memories';
   }
 

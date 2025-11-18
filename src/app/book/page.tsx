@@ -15,6 +15,10 @@ import { getAuth } from '@/lib/auth';
 function getBookStorageKey(projectId: string): string {
   if (typeof window === 'undefined') return `book-${projectId}`;
   const username = getAuth();
+  // L'admin accede ai dati senza prefisso (dati esistenti)
+  if (username === 'admin') {
+    return `book-${projectId}`;
+  }
   return username ? `book-${username}-${projectId}` : `book-${projectId}`;
 }
 

@@ -28,11 +28,7 @@ export function Logo({
   return (
     <div className="flex items-center gap-3">
       <div 
-        className={sizeClasses[size]}
-        style={{ 
-          filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
-          animation: animated ? 'bounce 2s infinite' : 'none',
-        }}
+        className={`${sizeClasses[size]} ${animated ? 'sheep-jumping' : ''} pinata-lama`}
       >
         🦙
       </div>

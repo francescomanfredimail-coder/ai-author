@@ -121,7 +121,10 @@ export default function SharePage() {
               Lama Bollente
             </h1>
             <p style={{ color: 'var(--foreground)', opacity: 0.7 }}>
-              Accedi per visualizzare il contenuto condiviso
+              Accedi con uno dei 3 account per visualizzare il contenuto condiviso
+            </p>
+            <p className="text-sm mt-2" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
+              Username: alpha, beta o gamma | Password: 1234
             </p>
           </div>
 

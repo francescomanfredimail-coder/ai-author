@@ -190,7 +190,7 @@ export default function LoginPage() {
 
         <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--border)' }}>
           <p className="text-xs text-center" style={{ color: 'var(--foreground)', opacity: 0.6 }}>
-            Account disponibili: alpha, beta, gamma
+            Account disponibili: alpha, beta, gamma{typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? ', admin' : ''}
           </p>
         </div>
       </div>

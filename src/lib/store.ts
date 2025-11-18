@@ -41,6 +41,10 @@ interface AppState {
 function getStorageName(): string {
   if (typeof window === 'undefined') return 'ai-author-storage';
   const username = localStorage.getItem('lama-bollente-auth');
+  // L'admin accede ai dati senza prefisso (dati esistenti)
+  if (username === 'admin') {
+    return 'ai-author-storage';
+  }
   return username ? `ai-author-storage-${username}` : 'ai-author-storage';
 }
 

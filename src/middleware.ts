@@ -2,8 +2,14 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Permetti l'accesso alla pagina di login senza autenticazione
-  if (request.nextUrl.pathname === '/login') {
+  const pathname = request.nextUrl.pathname;
+  
+  // Permetti l'accesso alle route pubbliche senza autenticazione Vercel
+  if (
+    pathname === '/login' ||
+    pathname.startsWith('/share/') ||
+    pathname.startsWith('/api/share')
+  ) {
     return NextResponse.next();
   }
 

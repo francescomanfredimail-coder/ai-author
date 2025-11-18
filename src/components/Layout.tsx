@@ -8,7 +8,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <AuthGuard>
       <div className="flex min-h-screen" style={{ backgroundColor: 'var(--background)' }}>
         <Sidebar />
-        <main className="flex-1 overflow-hidden" style={{ backgroundColor: 'var(--background)' }}>
+        <main className="flex-1 overflow-hidden md:ml-0 pt-16 md:pt-0" style={{ backgroundColor: 'var(--background)' }}>
           {children}
         </main>
       </div>

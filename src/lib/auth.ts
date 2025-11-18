@@ -10,6 +10,7 @@ export const USERS: User[] = [
   { username: 'alpha', password: '1234' },
   { username: 'beta', password: '1234' },
   { username: 'gamma', password: '1234' },
+  { username: 'admin', password: 'admin' },
 ];
 
 // Verifica credenziali
